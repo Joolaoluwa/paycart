@@ -1,0 +1,43 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - echo Installing dependencies...
+      - npm install
+
+  build:
+    commands:
+      - echo Zipping Lambda functions...
+
+      # Zip each function individually
+      - zip -j createOrder.zip functions/createOrder/index.js
+      - zip -j getOrder.zip functions/getOrder/index.js
+      - zip -j updateOrder.zip functions/updateOrder/index.js
+
+  post_build:
+    commands:
+      - echo Deploying to AWS Lambda...
+
+      # Deploy each function
+      - aws lambda update-function-code
+        --function-name paycart-createOrder
+        --zip-file fileb://createOrder.zip
+
+      - aws lambda update-function-code
+        --function-name paycart-getOrder
+        --zip-file fileb://getOrder.zip
+
+      - aws lambda update-function-code
+        --function-name paycart-updateOrder
+        --zip-file fileb://updateOrder.zip
+
+      - echo Deployment complete.
+
+artifacts:
+  files:
+    - createOrder.zip
+    - getOrder.zip
+    - updateOrder.zip
