@@ -23,15 +23,15 @@ phases:
 
       # Deploy each function
       - aws lambda update-function-code
-        --function-name paycart-createOrder
+        --function-name createOrder
         --zip-file fileb://createOrder.zip
 
       - aws lambda update-function-code
-        --function-name paycart-getOrder
+        --function-name getOrder
         --zip-file fileb://getOrder.zip
 
       - aws lambda update-function-code
-        --function-name paycart-updateOrder
+        --function-name updateOrder
         --zip-file fileb://updateOrder.zip
 
       - echo Deployment complete.
