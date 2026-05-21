@@ -13,9 +13,9 @@ phases:
       - echo Zipping Lambda functions...
 
       # Zip each function individually
-      - zip -j createOrder.zip functions/createOrder/index.js
-      - zip -j getOrder.zip functions/getOrder/index.js
-      - zip -j updateOrder.zip functions/updateOrder/index.js
+      - zip -j createOrder.zip function/createOrder/createOrder.mjs
+      - zip -j getOrder.zip function/getOrder/getOrder.mjs
+      - zip -j updateOrder.zip function/updateOrder/updateOrder.mjs
 
   post_build:
     commands:
