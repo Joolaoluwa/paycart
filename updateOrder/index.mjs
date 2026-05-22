@@ -6,7 +6,13 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 const TABLE_NAME = process.env.ORDERS_TABLE || "Orders";
 
-const VALID_STATUSES = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
+const VALID_STATUSES = [
+  "PENDING",
+  "CONFIRMED",
+  "SHIPPED",
+  "DELIVERED",
+  "CANCELLED",
+];
 
 export const handler = async (event) => {
   try {
@@ -22,7 +28,8 @@ export const handler = async (event) => {
     // --- At least one updatable field must be provided ---
     if (!status && !items && totalAmount === undefined) {
       return response(400, {
-        error: "Provide at least one field to update: status, items, or totalAmount.",
+        error:
+          "Provide at least one field to update: status, items, or totalAmount.",
       });
     }
 
@@ -61,7 +68,9 @@ export const handler = async (event) => {
 
     if (totalAmount !== undefined) {
       if (typeof totalAmount !== "number" || totalAmount <= 0) {
-        return response(400, { error: "totalAmount must be a positive number." });
+        return response(400, {
+          error: "totalAmount must be a positive number.",
+        });
       }
       expressionParts.push("#totalAmount = :totalAmount");
       expressionNames["#totalAmount"] = "totalAmount";
@@ -78,7 +87,7 @@ export const handler = async (event) => {
         // Ensure the order exists before updating
         ConditionExpression: "attribute_exists(orderId)",
         ReturnValues: "ALL_NEW",
-      })
+      }),
     );
 
     return response(200, {
@@ -97,6 +106,9 @@ export const handler = async (event) => {
 // --- Helper ---
 const response = (statusCode, body) => ({
   statusCode,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
   body: JSON.stringify(body),
 });
