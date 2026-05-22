@@ -9,7 +9,9 @@ const TABLE_NAME = process.env.ORDERS_TABLE || "Orders";
 
 export const handler = async (event) => {
   try {
-    const body = JSON.parse(event.body || "{}");
+    // ✅ Safe parse — handles both string and object
+    const body =
+      typeof event.body === "string" ? JSON.parse(event.body) : event.body;
     const { userId, items, totalAmount } = body;
     //    const userId = event.requestContext?.authorizer?.claims?.sub;
     //    const email = event.requestContext?.authorizer?.claims?.email;
