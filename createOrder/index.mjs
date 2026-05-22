@@ -43,7 +43,6 @@ export const handler = async (event) => {
     const order = {
       orderId: randomUUID(),
       userId,
-      email,
       items,
       totalAmount,
       status: "PENDING",
