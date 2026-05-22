@@ -10,19 +10,19 @@ const TABLE_NAME = process.env.ORDERS_TABLE || "Orders";
 export const handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
-    const { items, totalAmount } = body;
-    const userId = event.requestContext?.authorizer?.claims?.sub;
-    const email = event.requestContext?.authorizer?.claims?.email;
+    const { userId, items, totalAmount } = body;
+    //    const userId = event.requestContext?.authorizer?.claims?.sub;
+    //    const email = event.requestContext?.authorizer?.claims?.email;
 
     // --- Validation ---
 
-    if (!userId) {
-      return response(401, { error: "Unauthorized" });
-    }
+    // if (!userId) {
+    //   return response(401, { error: "Unauthorized" });
+    // }
 
-    if (!items || !Array.isArray(items) || items.length === 0) {
+    if (!userId || !items || !Array.isArray(items) || items.length === 0) {
       return response(400, {
-        error: "items array is required.",
+        error: "userId and items array are required.",
       });
     }
 
