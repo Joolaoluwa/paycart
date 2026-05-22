@@ -12,16 +12,14 @@ phases:
     commands:
       - echo Zipping Lambda functions...
 
-      # Zip each function individually
-      - zip -j createOrder.zip src/createOrder/createOrder.mjs
-      - zip -j getOrder.zip src/getOrder/getOrder.mjs
-      - zip -j updateOrder.zip src/updateOrder/updateOrder.mjs
+      - zip -r createOrder.zip src/createOrder/index.mjs node_modules/
+      - zip -r getOrder.zip src/getOrder/index.mjs node_modules/
+      - zip -r updateOrder.zip src/updateOrder/index.mjs node_modules/
 
   post_build:
     commands:
       - echo Deploying to AWS Lambda...
 
-      # Deploy each function
       - aws lambda update-function-code
         --function-name createOrder
         --zip-file fileb://createOrder.zip
