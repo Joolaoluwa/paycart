@@ -22,7 +22,9 @@ export const handler = async (event) => {
       return response(400, { error: "orderId path parameter is required." });
     }
 
-    const body = JSON.parse(event.body || "{}");
+    const body =
+      typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+
     const { status, items, totalAmount } = body;
 
     // --- At least one updatable field must be provided ---
