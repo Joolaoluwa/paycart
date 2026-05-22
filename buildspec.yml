@@ -12,9 +12,9 @@ phases:
     commands:
       - echo Zipping Lambda functions...
 
-      - zip -r createOrder.zip createOrder/index.mjs node_modules/
-      - zip -r getOrder.zip getOrder/index.mjs node_modules/
-      - zip -r updateOrder.zip updateOrder/index.mjs node_modules/
+      - zip -r createOrder.zip node_modules/ && zip -j createOrder.zip createOrder/index.mjs
+      - zip -r getOrder.zip node_modules/ && zip -j getOrder.zip getOrder/index.mjs
+      - zip -r updateOrder.zip node_modules/ && zip -j updateOrder.zip updateOrder/index.mjs
 
   post_build:
     commands:

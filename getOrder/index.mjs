@@ -22,7 +22,7 @@ export const handler = async (event) => {
         new GetCommand({
           TableName: TABLE_NAME,
           Key: { orderId },
-        })
+        }),
       );
 
       if (!result.Item) {
@@ -42,7 +42,7 @@ export const handler = async (event) => {
           ExpressionAttributeValues: { ":uid": userId },
           // Newest orders first
           ScanIndexForward: false,
-        })
+        }),
       );
 
       return response(200, {
@@ -53,7 +53,8 @@ export const handler = async (event) => {
 
     // --- Neither param provided ---
     return response(400, {
-      error: "Provide either a path parameter {orderId} or query param ?userId=",
+      error:
+        "Provide either a path parameter {orderId} or query param ?userId=",
     });
   } catch (error) {
     console.error("getOrder error:", error);
@@ -64,6 +65,9 @@ export const handler = async (event) => {
 // --- Helper ---
 const response = (statusCode, body) => ({
   statusCode,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
   body: JSON.stringify(body),
 });
