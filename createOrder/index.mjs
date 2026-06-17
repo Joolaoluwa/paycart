@@ -9,13 +9,22 @@ const TABLE_NAME = process.env.ORDERS_TABLE || "Orders";
 
 export const handler = async (event) => {
   try {
-    const body = JSON.parse(event.body || "{}");
+    // ✅ Safe parse — handles both string and object
+    const body =
+      typeof event.body === "string" ? JSON.parse(event.body) : event.body;
     const { userId, items, totalAmount } = body;
+    //    const userId = event.requestContext?.authorizer?.claims?.sub;
+    //    const email = event.requestContext?.authorizer?.claims?.email;
 
     // --- Validation ---
+
+    // if (!userId) {
+    //   return response(401, { error: "Unauthorized" });
+    // }
+
     if (!userId || !items || !Array.isArray(items) || items.length === 0) {
       return response(400, {
-        error: "userId and a non-empty items array are required.",
+        error: "userId and items array are required.",
       });
     }
 
@@ -26,7 +35,8 @@ export const handler = async (event) => {
     for (const item of items) {
       if (!item.productId || !item.quantity || item.quantity < 1) {
         return response(400, {
-          error: "Each item must have a productId and a quantity of at least 1.",
+          error:
+            "Each item must have a productId and a quantity of at least 1.",
         });
       }
     }
@@ -48,7 +58,7 @@ export const handler = async (event) => {
         Item: order,
         // Prevent accidental overwrite if UUID collides (extremely unlikely)
         ConditionExpression: "attribute_not_exists(orderId)",
-      })
+      }),
     );
 
     return response(201, { message: "Order created successfully.", order });
@@ -61,6 +71,9 @@ export const handler = async (event) => {
 // --- Helper ---
 const response = (statusCode, body) => ({
   statusCode,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
   body: JSON.stringify(body),
 });
